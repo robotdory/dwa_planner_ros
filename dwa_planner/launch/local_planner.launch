@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="ns" default="local_planner"/>
+
+    <arg name="dwa_param" default="$(find dwa_planner)/config/dwa_param.yaml"/>
+    <!-- topic name -->
+    <arg name="cmd_vel" default="/cmd_vel"/>
+    <arg name="scan" default="/scan"/>
+
+    <!-- run dwa_planner node -->
+<node pkg="dwa_planner" type="dwa_planner" name="dwa_planner" ns="$(arg ns)" output="screen">
+    <!-- 나머지 노드 설정과 파라미터 -->
+
+        <!-- param -->
+        <rosparam command="load" file="$(arg dwa_param)"/>
+        <!-- topic name -->
+        <remap from="/cmd_vel" to="$(arg cmd_vel)"/>
+        <remap from="/scan" to="$(arg scan)"/>
+    </node>
+</launch>
