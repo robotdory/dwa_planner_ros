@@ -1,4 +1,20 @@
-#include "dwa_planner/dwa_planner.h"
+// Copyright 2023 MOBILE ROBOTICS LAB. LTD.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// author : Robotdory (Taehyeon Kim)
+
+#include "dwa_planner/dwa_planner.hpp"
 
 #include <algorithm>
 #include <string>
@@ -261,9 +277,7 @@ geometry_msgs::Twist DWAPlanner::align_robot(void) {
     {
       cmd_vel.linear.x = 0.0;
       cmd_vel.angular.z = 0.2;  // 양수 각속도로 회전 (시계 방향)
-    } else if (target_angle_diff <
-               -ang_to_goal_th_)  // 목표 방향과의 각도 차이가 음수인 경우
-    {
+    } else if (target_angle_diff < -ang_to_goal_th_) {
       cmd_vel.linear.x = 0.0;
       cmd_vel.angular.z = -0.2;  // 음수 각속도로 회전 (반시계 방향)
     } else {
@@ -273,14 +287,10 @@ geometry_msgs::Twist DWAPlanner::align_robot(void) {
     // dist_to_goal_th_에서 다시 0.2를 빼줌
     dist_to_goal_th_ -= 0.2;
   } else {
-    if (goal_angle_diff >
-        ang_to_goal_th_)  // 목표 방향과의 각도 차이가 양수인 경우
-    {
+    if (goal_angle_diff > ang_to_goal_th_) {
       cmd_vel.linear.x = 0.0;
       cmd_vel.angular.z = 0.2;  // 양수 각속도로 회전 (시계 방향)
-    } else if (goal_angle_diff <
-               -ang_to_goal_th_)  // 목표 방향과의 각도 차이가 음수인 경우
-    {
+    } else if (goal_angle_diff < -ang_to_goal_th_) {
       cmd_vel.linear.x = 0.0;
       cmd_vel.angular.z = -0.2;  // 음수 각속도로 회전 (반시계 방향)
     } else {
@@ -494,8 +504,7 @@ void DWAPlanner::process(void) {
     if (!robot_aligned_ && robot_reached_)  // 로봇이 정렬되지 않으면
     {
       cmd_vel = align_robot();  // 로봇 정렬을 수행
-    } else  // 목표 지점과 정렬이 되면 로봇을 움직임
-    {
+    } else {
       cmd_vel = move_robot();
     }
     current_cmd_vel_ = cmd_vel;  // 도출된 속도를 current_cmd_vel 변수에저장
