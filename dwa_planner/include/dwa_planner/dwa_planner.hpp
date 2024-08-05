@@ -39,17 +39,20 @@
 #include <utility>
 #include <vector>
 
-class DWAPlanner {
- public:
+class DWAPlanner
+{
+public:
   DWAPlanner(void);
 
-  class State {
-   public:
+  class State
+  {
+public:
     State(void);
 
-    State(const double x, const double y, const double yaw,
+    State(
+      const double x, const double y, const double yaw,
 
-          const double velocity, const double yawrate);
+      const double velocity, const double yawrate);
 
     double x_;
     double y_;
@@ -58,32 +61,34 @@ class DWAPlanner {
     double yawrate_;
     double direction_to_goal_;
 
-   private:
+private:
   };
 
-  class Window {
-   public:
+  class Window
+  {
+public:
     Window(void);
 
-    Window(const double min_velocity, const double max_velocity,
-           const double min_yawrate, const double max_yawrate);
+    Window(
+      const double min_velocity, const double max_velocity,
+      const double min_yawrate, const double max_yawrate);
 
     double min_velocity_;
     double max_velocity_;
     double min_yawrate_;
     double max_yawrate_;
 
-   private:
+private:
   };
 
-  class Cost {
-   public:
+  class Cost
+  {
+public:
     Cost(void);
 
-    Cost(const float obs_cost, const float dist_cost,
-         const float direction_cost, const float total_cost);
-
-    void show(void);
+    Cost(
+      const float obs_cost, const float dist_cost,
+      const float direction_cost, const float total_cost);
 
     void calc_total_cost(void);
 
@@ -92,56 +97,62 @@ class DWAPlanner {
     float velocity_cost_;
     float total_cost_;
 
-   private:
+private:
   };
 
-  struct GoalPoint {
+  struct GoalPoint
+  {
     double x;
     double y;
     double yaw;
   };
 
   std::vector<GoalPoint> goals = {{goal_x_1, goal_y_1, goal_yaw_1},
-                                  {goal_x_2, goal_y_2, goal_yaw_2}};
+    {goal_x_2, goal_y_2, goal_yaw_2}};
 
   void process(void);
 
-  void scan_callback(const sensor_msgs::LaserScanConstPtr &msg);
+  void scan_callback(const sensor_msgs::LaserScanConstPtr & msg);
 
   Window create_dynamic_window(void);
 
-  float calc_obstacle_cost(const std::vector<State> &traj);
-  float calc_dist_cost(const std::vector<State> &traj,
-                       const Eigen::Vector3d &goal);
-  float calc_velocity_cost(const std::vector<State> &trajectory,
-                           const double prev_yawrate);
-  float calc_dist_to_path(const State state);
+  float calc_obstacle_cost(const std::vector<State> & traj);
+  float calc_dist_cost(
+    const std::vector<State> & traj,
+    const Eigen::Vector3d & goal);
+  float calc_velocity_cost(
+    const std::vector<State> & trajectory,
+    const double prev_yawrate);
 
-  void state_simulation(State &state, const double velocity,
-                        const double yawrate);
-  void scan_obstacles(const sensor_msgs::LaserScan &scan);
-  void update_local_goal();
+  void state_simulation(
+    State & state, const double velocity,
+    const double yawrate);
+  void scan_obstacles(const sensor_msgs::LaserScan & scan);
 
-  std::vector<State> generate_trajectory(const double velocity,
-                                         const double yawrate);
-  std::vector<State> generate_trajectory(const double yawrate,
-                                         const Eigen::Vector3d &goal);
-  Cost evaluate_trajectory(const std::vector<State> &trajectory,
-                           const Eigen::Vector3d &goal);
+  // void update_local_goal();
+
+  std::vector<State> generate_trajectory(
+    const double velocity,
+    const double yawrate);
+
+  Cost evaluate_trajectory(
+    const std::vector<State> & trajectory,
+    const Eigen::Vector3d & goal);
   geometry_msgs::Twist move_robot(void);
 
   geometry_msgs::Twist align_robot(void);
 
-  void normalize_cost(std::vector<Cost> &costs);
+  void normalize_cost(std::vector<Cost> & costs);
 
   std::vector<State>
 
-  dwa_planner(const Eigen::Vector3d &goal,
-              std::vector<std::pair<std::vector<State>, bool>> &trajectories);
+  dwa_planner(
+    const Eigen::Vector3d & goal,
+    std::vector<std::pair<std::vector<State>, bool>> & trajectories);
 
-  bool calculate_pose(tf::StampedTransform &robot_transform);
+  bool calculate_pose(tf::StampedTransform & robot_transform);
 
- public:
+public:
   std::string robot_frame_;
 
   double obs_th_;
